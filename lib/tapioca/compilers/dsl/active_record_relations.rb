@@ -546,7 +546,7 @@ module Tapioca
                   parameters: [
                     create_rest_param("args", type: "T.untyped"),
                   ],
-                  return_type: "T.nilable(#{constant_name})"
+                  return_type: "T.nilable(T.attached_class)"
                 )
               when :find_by!
                 create_common_method(
@@ -554,7 +554,7 @@ module Tapioca
                   parameters: [
                     create_rest_param("args", type: "T.untyped"),
                   ],
-                  return_type: constant_name
+                  return_type: 'T.attached_class'
                 )
               when :first, :last, :take
                 create_common_method(
@@ -568,9 +568,9 @@ module Tapioca
                 # skip
               else
                 return_type = if method_name.end_with?("!")
-                  constant_name
+                  'T.attached_class'
                 else
-                  "T.nilable(#{constant_name})"
+                  "T.nilable(T.attached_class)"
                 end
 
                 create_common_method(
@@ -630,7 +630,7 @@ module Tapioca
             end
 
             ENUMERABLE_QUERY_METHODS.each do |method_name|
-              block_type = "T.nilable(T.proc.params(record: #{constant_name}).returns(T.untyped))"
+              block_type = "T.nilable(T.proc.params(record: T.attached_class).returns(T.untyped))"
               create_common_method(
                 method_name,
                 parameters: [
@@ -641,14 +641,14 @@ module Tapioca
             end
 
             FIND_OR_CREATE_METHODS.each do |method_name|
-              block_type = "T.nilable(T.proc.params(object: #{constant_name}).void)"
+              block_type = "T.nilable(T.proc.params(object: T.attached_class).void)"
               create_common_method(
                 method_name,
                 parameters: [
                   create_param("attributes", type: "T.untyped"),
                   create_block_param("block", type: block_type),
                 ],
-                return_type: constant_name
+                return_type: 'T.attached_class'
               )
             end
 
@@ -657,9 +657,9 @@ module Tapioca
                 method_name,
                 parameters: [
                   create_opt_param("attributes", type: "T.untyped", default: "nil"),
-                  create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
+                  create_block_param("block", type: "T.nilable(T.proc.params(object: T.attached_class).void)"),
                 ],
-                return_type: constant_name
+                return_type: 'T.attached_class'
               )
             end
           end
